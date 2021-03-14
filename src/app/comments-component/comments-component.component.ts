@@ -4,7 +4,6 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { UserServiceService } from '../service/user-service.service';
-import { PageEvent } from '@angular/material/paginator';
 import { Comments } from './commentModel'
 import { ConfirmServiceService } from '../shared/confirm-service.service';
 @Component({
@@ -114,7 +113,7 @@ export class CommentsComponentComponent implements OnInit {
     }, function () {
     });
   }
-
+// Quick search
   onSearchClear() {
     this.searchKey = "";
     this.applyFilter();

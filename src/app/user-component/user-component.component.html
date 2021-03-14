@@ -53,8 +53,8 @@
           </div>
         </section>
       </mat-cell>
-
     </ng-container>
+<!-- loading container -->
     <ng-container matColumnDef="loading">
       <mat-footer-cell *matFooterCellDef colspan="6">
         Loading data...
@@ -67,9 +67,12 @@
       [ngClass]="{'hide':!(userDataSource!=null && userDataSource.data && userDataSource.data.length==0)}">
     </mat-footer-row>
   </mat-table>
+  <!-- pagination -->
   <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" [pageSize]="5" showFirstLastButtons></mat-paginator>
 
 </div>
+
+<!-- common user form  model  -->
 
 <div class="modal fade bd-example-modal-lg" id="user_creation_Modal" tabindex="-1" role="dialog"
   aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -238,7 +241,6 @@
           </mat-error>
         </mat-form-field>
         <div class="modal-footer">
-          <!-- <button type="button" class="btn btn-secondary" data-dismiss="modal" (click)="clearForm(user_creation_Modal);">Cancel</button> -->
           <button type="button" class="btn btn-primary" data-dismiss="modal"
             [disabled]="!user_creation_Modal.form.valid  " (click)="userCreationModal(userModel);">Submit</button>
         </div>

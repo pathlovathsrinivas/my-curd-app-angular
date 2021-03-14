@@ -122,6 +122,8 @@ export class UserComponentComponent implements OnInit {
     }, function () {
     });
   }
+
+  // Quik search
   onSearchClear() {
     this.searchKey = "";
     this.applyFilter();

@@ -11,6 +11,7 @@ export class ConfirmServiceComponent implements OnInit {
   constructor(private confirmService:ConfirmServiceService) { }
 
   ngOnInit(): void {
+    // getMessage call from  confirm-service
     this.confirmService.getMessage().subscribe(message=>{
       this.message=message;
       console.log('message',this.message)

@@ -3,14 +3,14 @@
     <h3>Post Resource</h3>
 </div>
 <div style="display:flex; flex-direction: row;">
-
+<!-- search field  -->
     <mat-form-field class="search-form-field" floatLabel="never">
         <input matInput [(ngModel)]="searchKey" placeholder="Search" autocomplete="off" (keyup)="applyFilter()">
         <button mat-button matSuffix mat-icon-button aria-label="Clear" *ngIf="searchKey" (click)="onSearchClear()">
             <mat-icon>close</mat-icon>
         </button>
     </mat-form-field>
-
+<!-- create button  -->
     <button mat-raised-button color="primary" style="margin-left: 450px;" data-toggle="modal"
         data-target="#post_creation_Modal" (click)="createPost()">
         <mat-icon>add</mat-icon>Create
@@ -57,6 +57,7 @@
             </mat-cell>
 
         </ng-container>
+        <!-- Loading container  -->
         <ng-container matColumnDef="loading">
             <mat-footer-cell *matFooterCellDef colspan="6">
                 Loading data...
@@ -69,9 +70,11 @@
             [ngClass]="{'hide':!(PostDataSource!=null && PostDataSource.data && PostDataSource.data.length==0)}">
         </mat-footer-row>
     </mat-table>
+    <!-- pagination  -->
     <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" [pageSize]="5" showFirstLastButtons></mat-paginator>
 
 </div>
+<!-- common post popup model  -->
 <div class="modal fade bd-example-modal-lg" id="post_creation_Modal" tabindex="-1" role="dialog"
     aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">

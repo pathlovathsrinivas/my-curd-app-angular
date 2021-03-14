@@ -67,7 +67,7 @@ export class PostsComponentComponent implements OnInit {
       this.PostDataSource.data = this.PostData;
     }
     this.editValues = false;
-    // this.userModel=new user
+   
 
   }
   //  For Form closing
@@ -113,10 +113,10 @@ export class PostsComponentComponent implements OnInit {
       that.service.deletePost(obj.id).subscribe(data => {
       })
      }, function () {
-  });
-
-   
+  }); 
   }
+
+   // Quik search
   onSearchClear() {
     this.searchKey = "";
     this.applyFilter();

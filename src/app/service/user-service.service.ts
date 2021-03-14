@@ -12,7 +12,7 @@ import { data } from 'jquery';
 export class UserServiceService {
 
   constructor(private http: HttpClient) { }
-
+// API Service calls
   getUserDetails(): Observable<any> {
     return this.http.get(`${environment.url}/${apiurl.users}`)
       .pipe(map(data => data));
