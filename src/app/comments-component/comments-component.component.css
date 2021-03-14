@@ -1,0 +1,40 @@
+table {
+    width: 100%;
+  }
+  
+  .mat-form-field {
+    font-size: 14px;
+    width: 100%;
+  }
+  
+  td, th {
+    width: 25%;
+  }
+  .mat-elevation-z8{
+  
+    margin-left: 60px;
+    margin-right: 60px;
+    margin-top: 20px;
+  }
+  .customButton{
+    margin-right: 60px;
+  }
+  .modal-content {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    pointer-events: auto;
+    background-color: #fff;
+    background-clip: padding-box;
+    border: 1px solid rgba(0,0,0,.2);
+    border-radius: .3rem;
+    outline: 0;
+}
+.mat-form-field{
+  width: 390px;
+  margin-left: 50px;
+}
+.input {
+    word-wrap: break-word;
+  }

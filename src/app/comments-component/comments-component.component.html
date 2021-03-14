@@ -1,0 +1,167 @@
+<!-- !-- Filter    -->
+<div style="text-align: center;color: green;">
+    <h3>Comment Resource</h3>
+</div>
+<div style="display:flex; flex-direction: row;">
+
+    <mat-form-field class="search-form-field" floatLabel="never">
+        <input matInput [(ngModel)]="searchKey" placeholder="Search" autocomplete="off" (keyup)="applyFilter()">
+        <button mat-button matSuffix mat-icon-button aria-label="Clear" *ngIf="searchKey" (click)="onSearchClear()">
+            <mat-icon>close</mat-icon>
+        </button>
+    </mat-form-field>
+    <button mat-raised-button color="primary" style="margin-left: 450px;" data-toggle="modal"
+        data-target="#comment_creation_Modal" (click)="createPost()">
+        <mat-icon>add</mat-icon>Create
+    </button>
+</div>
+<div class="mat-elevation-z8">
+    <mat-table [dataSource]="commentDataSource" matSort>
+
+        <!-- ID Column -->
+        <ng-container matColumnDef="postId">
+            <mat-header-cell *matHeaderCellDef mat-sort-header> PostId </mat-header-cell>
+            <mat-cell *matCellDef="let row"> {{row.postId}} </mat-cell>
+        </ng-container>
+
+        <!-- Progress Column -->
+        <ng-container matColumnDef="id">
+            <mat-header-cell *matHeaderCellDef mat-sort-header> ID </mat-header-cell>
+            <mat-cell *matCellDef="let row"> {{row.id}} </mat-cell>
+        </ng-container>
+
+        <!-- Name Column -->
+        <ng-container matColumnDef="name">
+            <mat-header-cell *matHeaderCellDef mat-sort-header> Name </mat-header-cell>
+            <mat-cell *matCellDef="let row"> {{row.name}} </mat-cell>
+        </ng-container>
+
+        <!-- Color Column -->
+        <ng-container matColumnDef="Actions">
+            <mat-header-cell *matHeaderCellDef mat-sort-header> Actions </mat-header-cell>
+
+            <mat-cell *matCellDef="let row">
+                <section>
+
+                    <div class="example-button-row">
+
+                        <button mat-raised-button color="primary" data-toggle="modal"
+                            data-target="#comment_creation_Modal" (click)="viewData(row)">View</button>
+                        <button mat-raised-button color="accent" data-toggle="modal"
+                            data-target="#comment_creation_Modal" (click)="EditData(row)">Edit</button>
+                        <button mat-raised-button color="warn" (click)="Delete(row)">Delete</button>
+
+                    </div>
+                </section>
+            </mat-cell>
+
+        </ng-container>
+        <ng-container matColumnDef="loading">
+            <mat-footer-cell *matFooterCellDef colspan="6">
+                Loading data...
+            </mat-footer-cell>
+        </ng-container>
+
+        <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+        <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+        <mat-footer-row *matFooterRowDef="['loading']"
+            [ngClass]="{'hide':!(commentDataSource!=null && commentDataSource.data && commentDataSource.data.length==0)}">
+        </mat-footer-row>
+    </mat-table>
+    <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" [pageSize]="5" showFirstLastButtons></mat-paginator>
+
+</div>
+<div class="modal fade bd-example-modal-lg" id="comment_creation_Modal" tabindex="-1" role="dialog"
+    aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <mat-card style="width: 460px;background-color: #73c20e;">
+                    <div style="display:flex; flex-direction: row;">
+                        <h3 class="modal-title" *ngIf="!editFlag&&!editValues" id="exampleModalLabel">Create New Comment
+                        </h3>
+                        <h3 class="modal-title" *ngIf="editFlag&&!editValues" id="exampleModalLabel">View Comment
+                            Details
+                        </h3>
+                        <h3 class="modal-title" *ngIf="!editFlag&&editValues" id="exampleModalLabel">Edit Comment
+                            Details
+                        </h3>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"
+                            (click)="closeForm(comment_creation_Modal);">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                </mat-card>
+            </div>
+            <form #comment_creation_Modal="ngForm" novalidate>
+                <mat-form-field fxFlex="22">
+                    <input matInput placeholder="postId" type="number" name="postId" [disabled]="editFlag"
+                        [(ngModel)]="CommentsModel.postId" #postId="ngModel" required>
+                    <mat-error *ngIf="postId.invalid && (postId.dirty ||postId.touched)">
+                        <div *ngIf="postId.errors['required']">
+                            <small>This field is required</small>
+                        </div>
+                    </mat-error>
+                </mat-form-field>
+                <mat-form-field fxFlex="22">
+                    <input matInput required placeholder="ID" name="id" type="number" [disabled]="editFlag"
+                        [(ngModel)]="CommentsModel.id" #id="ngModel" required>
+
+                    <mat-error *ngIf="id.invalid && (id.dirty ||id.touched)">
+                        <div *ngIf="id.errors['required']">
+                            <small>This field is required</small>
+                        </div>
+                    </mat-error>
+
+                </mat-form-field>
+
+
+
+                <mat-form-field fxFlex="22">
+                    <textarea matInput placeholder="name" type="text" name="name" [(ngModel)]="CommentsModel.name"
+                        [disabled]="editFlag" #name="ngModel" required></textarea>
+
+                    <mat-error *ngIf="name.invalid && (name.dirty ||name.touched)" style="color: red;">
+                        <div *ngIf="name.errors['required']">
+                            <small> This field is required..</small>
+                        </div>
+                    </mat-error>
+
+                </mat-form-field>
+                <mat-form-field fxFlex="20">
+                    <textarea matInput placeholder="email" type="email" name="email" [(ngModel)]="CommentsModel.email"
+                        [disabled]="editFlag" #email="ngModel" required email></textarea>
+
+                    <mat-error *ngIf="email.invalid && (email.dirty ||email.touched)" style="color: red;">
+                        <div *ngIf="email.errors['required']">
+                            <small>This field is required</small>
+                        </div>
+                        <p *ngIf="email.errors?.email">This is not a valid Email!!!</p>
+                    </mat-error>
+
+                </mat-form-field>
+
+                <mat-form-field fxFlex="20">
+                    <textarea matInput placeholder="Body" type="text" name="body" [(ngModel)]="CommentsModel.body"
+                        [disabled]="editFlag" #body="ngModel" required email></textarea>
+
+                    <mat-error *ngIf="body.invalid && (body.dirty ||body.touched)" style="color: red;">
+                        <div *ngIf="body.errors['required']">
+                            <small>This field is required</small>
+                        </div>
+                    </mat-error>
+
+                </mat-form-field>
+
+
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-dismiss="modal"
+                        [disabled]="!comment_creation_Modal.form.valid  "
+                        (click)="commentCreationModal(CommentsModel);">Submit</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<app-confirm-service></app-confirm-service>

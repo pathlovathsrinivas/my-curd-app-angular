@@ -1,0 +1,249 @@
+<div style="text-align: center;color: green;">
+  <h3>User Resource</h3>
+</div>
+<!-- Filter    -->
+<div style="display:flex; flex-direction: row;">
+  <mat-form-field class="search-form-field" floatLabel="never">
+    <input matInput [(ngModel)]="searchKey" placeholder="Search" autocomplete="off" (keyup)="applyFilter()">
+    <button mat-button matSuffix mat-icon-button aria-label="Clear" *ngIf="searchKey" (click)="onSearchClear()">
+      <mat-icon>close</mat-icon>
+    </button>
+  </mat-form-field>
+  <button mat-raised-button color="primary" style="margin-left: 450px;" data-toggle="modal"
+    data-target="#user_creation_Modal" (click)="createUser()">
+    <mat-icon>add</mat-icon>Create
+  </button>
+</div>
+<div class="mat-elevation-z8">
+  <mat-table [dataSource]="userDataSource" matSort>
+
+    <!-- ID Column -->
+    <ng-container matColumnDef="id">
+      <mat-header-cell *matHeaderCellDef mat-sort-header> ID </mat-header-cell>
+      <mat-cell *matCellDef="let row"> {{row.id}} </mat-cell>
+    </ng-container>
+
+    <!-- Progress Column -->
+    <ng-container matColumnDef="name">
+      <mat-header-cell *matHeaderCellDef mat-sort-header> name </mat-header-cell>
+      <mat-cell *matCellDef="let row"> {{row.name}} </mat-cell>
+    </ng-container>
+
+    <!-- Name Column -->
+    <ng-container matColumnDef="username">
+      <mat-header-cell *matHeaderCellDef mat-sort-header> username </mat-header-cell>
+      <mat-cell *matCellDef="let row"> {{row.username}} </mat-cell>
+    </ng-container>
+
+    <!-- Color Column -->
+    <ng-container matColumnDef="Actions">
+      <mat-header-cell *matHeaderCellDef mat-sort-header> Actions </mat-header-cell>
+
+      <mat-cell *matCellDef="let row">
+        <section>
+
+          <div class="example-button-row">
+
+            <button mat-raised-button color="primary" data-toggle="modal" data-target="#user_creation_Modal"
+              (click)="viewData(row)">View</button>
+            <button mat-raised-button color="accent" data-toggle="modal" data-target="#user_creation_Modal"
+              (click)="EditData(row)">Edit</button>
+            <button mat-raised-button color="warn" (click)="Delete(row)">Delete</button>
+
+          </div>
+        </section>
+      </mat-cell>
+
+    </ng-container>
+    <ng-container matColumnDef="loading">
+      <mat-footer-cell *matFooterCellDef colspan="6">
+        Loading data...
+      </mat-footer-cell>
+    </ng-container>
+
+    <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+    <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+    <mat-footer-row *matFooterRowDef="['loading']"
+      [ngClass]="{'hide':!(userDataSource!=null && userDataSource.data && userDataSource.data.length==0)}">
+    </mat-footer-row>
+  </mat-table>
+  <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" [pageSize]="5" showFirstLastButtons></mat-paginator>
+
+</div>
+
+<div class="modal fade bd-example-modal-lg" id="user_creation_Modal" tabindex="-1" role="dialog"
+  aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <mat-card style="width: 460px;background-color: #73c20e;">
+          <div style="display:flex; flex-direction: row;">
+            <h3 class="modal-title" *ngIf="!editFlag&&!editValues" id="exampleModalLabel">Create New User</h3>
+            <h3 class="modal-title" *ngIf="editFlag&&!editValues" id="exampleModalLabel">View User Details</h3>
+            <h3 class="modal-title" *ngIf="!editFlag&&editValues" id="exampleModalLabel">Edit User Details</h3>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"
+              (click)="closeForm(user_creation_Modal);">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+        </mat-card>
+      </div>
+      <form #user_creation_Modal="ngForm" novalidate>
+        <mat-form-field fxFlex="22">
+          <input matInput required placeholder="id" name="id" type="number" [disabled]="editFlag"
+            [(ngModel)]="userModel.id" #id="ngModel" required>
+
+          <mat-error *ngIf="id.invalid && (id.dirty ||id.touched)">
+            <div *ngIf="id.errors['required']">
+              <small>This field is required</small>
+            </div>
+          </mat-error>
+
+        </mat-form-field>
+        <mat-form-field fxFlex="22">
+          <input matInput placeholder="name" type="text" name="name" [disabled]="editFlag" [(ngModel)]="userModel.name"
+            #name="ngModel" required>
+          <mat-error *ngIf="name.invalid && (name.dirty ||name.touched)">
+            <div *ngIf="name.errors['required']">
+              <small>This field is required</small>
+            </div>
+          </mat-error>
+        </mat-form-field>
+
+        <mat-form-field fxFlex="22">
+          <input matInput placeholder="username" type="text" name="username" [(ngModel)]="userModel.username"
+            [disabled]="editFlag" #username="ngModel" required>
+          <mat-error *ngIf="username.invalid && (username.dirty ||username.touched)" style="color: red;">
+            <div *ngIf="username.errors['required']">
+              <small> This field is required..</small>
+            </div>
+          </mat-error>
+
+        </mat-form-field>
+
+        <mat-form-field fxFlex="20">
+
+          <input matInput placeholder="email" type="email" name="email" [(ngModel)]="userModel.email"
+            [disabled]="editFlag" #email="ngModel" required email />
+          <mat-error *ngIf="email.invalid && (email.dirty ||email.touched)" style="color: red;">
+            <div *ngIf="email.errors['required']">
+              <small>This field is required</small>
+            </div>
+            <p *ngIf="email.errors?.email">This is not a valid Email!!!</p>
+          </mat-error>
+
+        </mat-form-field>
+
+        <mat-form-field fxFlex="20">
+          <input matInput placeholder="phone." type="text" name="phone" [disabled]="editFlag"
+            [(ngModel)]="userModel.phone" #phone="ngModel" required>
+          <mat-error *ngIf="phone.invalid && (phone.dirty ||phone.touched)" style="color: red;">
+            <div *ngIf="phone.errors['required']">
+              <small>This field is required</small>
+            </div>
+
+          </mat-error>
+
+        </mat-form-field>
+
+        <mat-form-field fxFlex="20">
+          <input matInput placeholder="website" type="text" name="website" [(ngModel)]="userModel.website"
+            [disabled]="editFlag" #website="ngModel" required>
+          <mat-error *ngIf="website.invalid && (website.dirty ||website.touched)" style="color: red;">
+            <div *ngIf="website.errors['required']">
+              <small>This field is required</small>
+            </div>
+          </mat-error>
+
+        </mat-form-field>
+        <mat-form-field fxFlex="22">
+          <input matInput placeholder="company Name" type="text" name="companyName" [disabled]="editFlag"
+            [(ngModel)]="userModel.company&&userModel.company.name" #companyName="ngModel" required>
+          <mat-error *ngIf="companyName.invalid && (companyName.dirty ||companyName.touched)">
+            <div *ngIf="companyName.errors['required']">
+              <small>This field is required</small>
+            </div>
+          </mat-error>
+        </mat-form-field>
+        <mat-form-field fxFlex="22">
+          <input matInput placeholder="catchPhrase" type="text" name="catchPhrase" [disabled]="editFlag"
+            [(ngModel)]="userModel.company&&userModel.company.catchPhrase" #catchPhrase="ngModel" required>
+          <mat-error *ngIf="catchPhrase.invalid && (catchPhrase.dirty ||catchPhrase.touched)">
+            <div *ngIf="catchPhrase.errors['required']">
+              <small>This field is required</small>
+            </div>
+          </mat-error>
+        </mat-form-field>
+        <mat-form-field fxFlex="22">
+          <input matInput placeholder="bs" name="bs" type="text" [disabled]="editFlag"
+            [(ngModel)]="userModel.company&&userModel.company.bs" #bs="ngModel" required>
+          <mat-error *ngIf="bs.invalid && (bs.dirty ||bs.touched)">
+            <div *ngIf="bs.errors['required']">
+              <small>This field is required</small>
+            </div>
+          </mat-error>
+        </mat-form-field>
+        <mat-form-field fxFlex="22">
+          <input matInput placeholder="street" name="street" type="text" [disabled]="editFlag"
+            [(ngModel)]="userModel.address&&userModel.address.street" #street="ngModel" required>
+          <mat-error *ngIf="street.invalid && (street.dirty ||street.touched)">
+            <div *ngIf="street.errors['required']">
+              <small>This field is required</small>
+            </div>
+          </mat-error>
+        </mat-form-field>
+        <mat-form-field fxFlex="22">
+          <input matInput placeholder="suite" name="suite" type="text" [disabled]="editFlag"
+            [(ngModel)]="userModel.address&&userModel.address.suite" #suite="ngModel" required>
+          <mat-error *ngIf="suite.invalid && (suite.dirty ||suite.touched)">
+            <div *ngIf="suite.errors['required']">
+              <small>This field is required</small>
+            </div>
+          </mat-error>
+        </mat-form-field>
+        <mat-form-field fxFlex="22">
+          <input matInput placeholder="city" name="city" type="text" [disabled]="editFlag"
+            [(ngModel)]="userModel.address&&userModel.address.city" #city="ngModel" required>
+          <mat-error *ngIf="city.invalid && (city.dirty ||city.touched)">
+            <div *ngIf="city.errors['required']">
+              <small>This field is required</small>
+            </div>
+          </mat-error>
+        </mat-form-field>
+        <mat-form-field fxFlex="22">
+          <input matInput placeholder="zipcode" name="zipcode" type="text" [disabled]="editFlag"
+            [(ngModel)]="userModel.address&&userModel.address.zipcode" #zipcode="ngModel" required>
+          <mat-error *ngIf="zipcode.invalid && (zipcode.dirty ||zipcode.touched)">
+            <div *ngIf="zipcode.errors['required']">
+              <small>This field is required</small>
+            </div>
+          </mat-error>
+        </mat-form-field>
+        <mat-form-field fxFlex="22">
+          <input matInput placeholder="lat" name="lat" type="number" [disabled]="editFlag"
+            [(ngModel)]="userModel.address&&userModel.address.geo&&userModel.address.geo.lat" #lat="ngModel" required>
+          <mat-error *ngIf="lat.invalid && (lat.dirty ||lat.touched)">
+            <div *ngIf="lat.errors['required']">
+              <small>This field is required</small>
+            </div>
+          </mat-error>
+        </mat-form-field>
+        <mat-form-field fxFlex="22">
+          <input matInput placeholder="lng" name="lng" [disabled]="editFlag" type="number"
+            [(ngModel)]="userModel.address&&userModel.address.geo&&userModel.address.geo.lng" #lng="ngModel" required>
+          <mat-error *ngIf="lng.invalid && (lng.dirty ||lng.touched)">
+            <div *ngIf="lng.errors['required']">
+              <small>This field is required</small>
+            </div>
+          </mat-error>
+        </mat-form-field>
+        <div class="modal-footer">
+          <!-- <button type="button" class="btn btn-secondary" data-dismiss="modal" (click)="clearForm(user_creation_Modal);">Cancel</button> -->
+          <button type="button" class="btn btn-primary" data-dismiss="modal"
+            [disabled]="!user_creation_Modal.form.valid  " (click)="userCreationModal(userModel);">Submit</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+<app-confirm-service></app-confirm-service>

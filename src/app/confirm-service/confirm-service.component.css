@@ -1,0 +1,32 @@
+.wrapper{
+    /* position: absolute; */
+    text-align: center;
+    margin-bottom: 20px;
+}
+.btnok .btnok:hover{
+    width:8%;  
+    height: 8%;
+    padding: 0.4em 0.1675em;
+    font-weight: 800;
+    color: #fff;
+    background-color: #73c20e;
+    border-color: #73c20e;
+  }
+  .modal {
+    top: 30%;
+ }
+ p {
+    font-size: 1em;
+font-weight: 600;
+}
+
+.btn-primary .btn-primary:hover {
+    color: #fff;
+    background-color: #73c20e;
+    border-color: #73c20e;
+}
+.btn-primary {
+    color: #fff;
+    background-color: #73c20e;
+    border-color: #73c20e;
+}
